@@ -180,7 +180,7 @@ const TimeTrackerPage = (props) => {
               <Card body className="shadow p-3 mb-5 bg-body rounded col-12">
                 <h4>Work Tracker {''}</h4><small>{''}</small>
                 {/* <h4>Welcome {first_name ?? ''}</h4><small>{account_type ?? ''}<button onClick={handleLogout}>Logout</button></small> */}
-                <div> <p>Time: <small>{readableTime ?? ''}</small></p> </div>
+                <div> <p>Time: <strong className="">{readableTime ?? '0 hrs 0 mins 0 secs'}</strong></p> </div>
                 <button className={"btn btn-lg btn-success col-6"} onClick={startTimer}>Start</button>
                 <button className={"btn btn-lg btn-warning col-6"} onClick={()=> settimerStopped(true)}>Stop</button>
                 <div>

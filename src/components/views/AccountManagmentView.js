@@ -12,12 +12,15 @@ import Tab from 'react-bootstrap/Tab';
 import Nav from 'react-bootstrap/Nav';
 
 const AccountManagmentView = ()=>{
+    const [team, setTeam] = useState();
+
+
     useEffect(()=>{
-        console.log("Hellp from AccountManagmentView");
+
         fetch('http://localhost:9000/testapi')
-        .then(res => res.text())
-        .then(result => console.log("the results is...", result))
-        .catch(error => console.log("Error: ", error));
+            .then(res => res.text())
+            .then(result => console.log("the results is...", result))
+            .catch(error => console.log("Error: ", error));
     },
     [])
 

@@ -24,25 +24,38 @@ const UserManagementView = () =>{
             </Col>
           </Row>
           <i class="bi-alarm"></i>
+
+
+
+
         <Container>
-          <Accordion defaultActiveKey="0">
-            <Card>
-              <Accordion.Toggle as={Card.Header} eventKey="0">
-                Click me!
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey="0">
-                <Card.Body>Hello! I'm the body</Card.Body>
-              </Accordion.Collapse>
-            </Card>
-            <Card>
-              <Accordion.Toggle as={Card.Header} eventKey="1">
-                Click me!
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey="1">
-                <Card.Body>Hello! I'm another body</Card.Body>
-              </Accordion.Collapse>
-            </Card>
-          </Accordion>
+          <Row className="mt-5">
+          <Col xs={6}>
+            <Accordion defaultActiveKey="0">
+              <Card>
+                <Accordion.Toggle as={Card.Header} eventKey="0">
+                  Andrew Jenkins
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey="0">
+                  <Card.Body>Very hard worker</Card.Body>
+                </Accordion.Collapse>
+              </Card>
+              <Card>
+                <Accordion.Toggle as={Card.Header} eventKey="1">
+                  Oriente Kim
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey="1">
+                  <Card.Body>Excelent worker. never misses a day</Card.Body>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
+          </Col>
+          <Col xs={6}>
+            <p>Click a user to view their profile</p>
+            <small>feature comming soon!</small>
+          </Col>
+          </Row>
+          
         </Container>
         
       </div>

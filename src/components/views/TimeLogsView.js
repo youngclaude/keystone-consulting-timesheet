@@ -95,12 +95,11 @@ const TimeLogsView = () => {
                     <p className="text-muted">View past timelogs</p>
                 </Col>
             </Row>
-<Container>
+        <Container>
             {
                 timeLogs.time_logs.map((logObj)=><p>{logObj.duration}</p>)
             }
-
-</Container>
+        </Container>
 
 
 
