@@ -5,6 +5,11 @@ import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
 
+import ReactNotification from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+
+import { store } from 'react-notifications-component';
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -14,6 +19,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { Link } from "react-router-dom";
 
 import Card from 'react-bootstrap/Card';
+import moment from 'moment';
 
 const TimeTrackerPage = (props) => {
     const [timerStopped, settimerStopped] = useState(false);
@@ -35,8 +41,8 @@ const TimeTrackerPage = (props) => {
 
     const nowRef = useRef(0);
     const currentTimeRef = useRef(0);
-
     const stopTimerRef = useRef(timerStopped);
+    const readableTextRef = useRef('');
 
     const startTimer = () => {
         if(!interval){
@@ -61,10 +67,13 @@ const TimeTrackerPage = (props) => {
             //setCurrentTime(now);
             
             setReadableTime(readableText);
+
+            readableTextRef.current = readableText;
             currentTimeRef.current = now;
   
             checkIfStop(interval);
-            // console.log("interval...", interval);                
+            console.log("nowRef.current", nowRef.current);                
+            console.log("currentTimeRef.current", currentTimeRef.current);                
             // clearInterval(interval);            
         }, 1000);
 
@@ -90,25 +99,44 @@ const TimeTrackerPage = (props) => {
     }
 
     const handleAddTimeBlock = () => {     
-        console.log("handleAddTimeBlock: startTime..", startTime, "currentTime...", currentTime);     
+        console.log("handleAddTimeBlock: nowRef..", nowRef, "currentTimeRef...", currentTimeRef);     
         
-        const safeNowVal = nowRef["current"];
-        const safeCurrentVal = currentTimeRef["current"];
+        const safeNowVal = JSON.parse(JSON.stringify(nowRef));
+        const safeCurrentVal = JSON.parse(JSON.stringify(currentTimeRef));
+
+        console.log("handleAddTimeBlock: safeCurrentVal..", safeCurrentVal, "safeNowVal...", safeNowVal);     
 
         let timeSheetCopy = [];
         if(timeSheet.length <=  0){          
           const newTimeBlock = {
-            started_at: Math.abs(safeNowVal),
-            ended_at: Math.abs(safeCurrentVal)
+            started_at: Math.abs(safeNowVal.current),
+            ended_at: Math.abs(safeCurrentVal.current),
+            duration: readableTextRef.current
           }
-          timeSheetCopy[0] = newTimeBlock
+          timeSheetCopy[0] = {...newTimeBlock}
         } else {
           timeSheetCopy = [...timeSheet];
           const newTimeBlock = {
-            started_at: Math.abs(safeNowVal),
-            ended_at: Math.abs(safeCurrentVal)
+            started_at: Math.abs(safeNowVal.current),
+            ended_at: Math.abs(safeCurrentVal.current),
+            duration: readableTextRef.current
           }
-          timeSheetCopy.push(newTimeBlock);
+          timeSheetCopy.push({...newTimeBlock});
+
+
+          store.addNotification({
+            title: "Success",
+            message: "Your time was added and saved",
+            type: "success",
+            insert: "top",
+            container: "bottom-left",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+              duration: 5000,
+              onScreen: true
+            }
+          });
         }
               
         setTimeSheet(timeSheetCopy);
@@ -126,7 +154,7 @@ const TimeTrackerPage = (props) => {
     const checkIfStop = (givenInterval, forceStop = false) =>{
         if(timerStoppedRef.current){
             console.log("time to stop....");    
-            console.log("checkIfStop: startTime..", startTime, "currentTime...", currentTime);   
+            console.log("checkIfStop: startTime..", nowRef, "currentTime...", currentTimeRef);   
             handleAddTimeBlock();
             clearInterval(givenInterval);
         }
@@ -137,7 +165,9 @@ const TimeTrackerPage = (props) => {
   
     return (
       <div>
-          { console.log("handleAddTimeBlock: startTime..", startTime, "currentTime...", currentTime) }
+      <ReactNotification />
+          { 
+            console.log("checkIfStop: startTime..", nowRef, "currentTime...", currentTimeRef) }
           <AppNavigation /> 
           <Row className="bg-dark" style={{padding: "50px 0px"}}>
             <Col className="text-center">
@@ -155,7 +185,7 @@ const TimeTrackerPage = (props) => {
                 <button className={"btn btn-lg btn-warning col-6"} onClick={()=> settimerStopped(true)}>Stop</button>
                 <div>
                 <ListGroup>
-                  { timeSheet.length > 0 ? timeSheet.map((timesObj, index)=> <TimeBlock key={index} start={timesObj.started_at} end={timesObj.ended_at}/>) : null}
+                  { timeSheet.length > 0 ? timeSheet.map((timesObj, index)=> <TimeBlock key={index} start={timesObj.started_at} end={timesObj.ended_at} duration={timesObj.duration}/>) : null}
                 </ListGroup>
                 </div>
               </Card>
@@ -168,5 +198,22 @@ const TimeTrackerPage = (props) => {
   export default TimeTrackerPage;
 
   const TimeBlock = (props) =>{
-    return <ListGroup.Item> <span>{Date(props.start)} </span> {" to "} <span>{Date(props.end)}</span> </ListGroup.Item>
+    return <ListGroup.Item> <span><small className="text-muted">from</small>{props.start} </span> <small className="text-muted">  to  </small>{} <span>{props.end}</span> | <span>{props.duration}</span></ListGroup.Item>
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // var isoDuration1 = moment.duration(props.start,'seconds').toISOString();
+    // var isoDuration2 = moment.duration(props.end,'seconds').toISOString();
+    // var isoDuration1 = moment(props.start, "DD MM YYYY hh:mm:ss");
+    // var isoDuration2 = moment(props.end, "DD MM YYYY hh:mm:ss");

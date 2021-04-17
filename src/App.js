@@ -27,39 +27,13 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
   Link
 } from "react-router-dom";
 
 function App() {
   const [userData, setUserData] = useState('');
   const [authCheck, setAuthCheck] = useState(false);
-
-  useEffect(()=>{
-    var myHeaders = new Headers();
-    myHeaders.append("Accept", "application/json");
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Access-Control-Allow-Credentials", true);
-    myHeaders.append("Access-Control-Allow-Origin", "https://fieldpulse.keystrokeconsulting.com/");
-    myHeaders.append("Access-Control-Allow-Headers", "https://fieldpulse.keystrokeconsulting.com/");
-
-
-    // Access-Control-Allow-Headers 
-    // . Also, make sure the HTTP headers Access-Control-Allow-Origin and Access-Control-Allow-Headers 
-    // are set and not with a wildcard *
-    myHeaders.append("Cookie", "remember_web_59ba36addc2b2f9401580f014c7f58ea4e30989d=eyJpdiI6Ii94WTR3M2VVWFh6dU5XZEVkOHBZM3c9PSIsInZhbHVlIjoiZ2l2eGlUdGFyRmFFNzNxWWFXS3dlOTYyN1lEaFZ3SGtGM3crQ09TZGZVdkhqWkN0aXh0SFpjVlkyNy9Pek5iWkFDNlJ6SDhQOExBKy8ySGdSTmpMQ0h3bDhTR0l6aUJLbk4zNkNTbmE1UFZpcDV3TXBsOEZrMmJGdW9HeEEvSjZ4RzRFa3RVcHZtRndnUWtjclBZZ2F2akZiZXZnVVdicjhES01MUWtidTNvPSIsIm1hYyI6ImIzOWZjMTM2NzJkMTJjZWNjZDU4ZDAxMjM0YzI2NGMzN2E0Mjc2ZTAzM2JhYzQyZDNjYWM3MmUyZjIzYTYwOGUifQ%3D%3D; expires=Mon, 13-Apr-2026 02:44:07 GMT; Max-Age=157680000; path=/; httponly; samesite=lax"); 
-    myHeaders.append("Cookie", "field_pulse_session=qU6vghDbFgyY6dYMLL9IxcVS3OFeRJCfPMSc4CL2; expires=Wed, 14-Apr-2021 04:44:07 GMT; Max-Age=7200; path=/; httponly; samesite=lax");    
-    
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-    };    
-
-    fetch("https://fieldpulse.keystrokeconsulting.com/api/sessions/current", requestOptions)
-      .then(response => response.text())
-      .then(result => console.log("FROM Get Current User: ", result))
-      .catch(error => console.log('error', error));
-  }, )
 
 
   const handleLoginSumbition = (e) =>{
@@ -125,6 +99,8 @@ function App() {
           });
           setUserData(temp.success.data);
           setAuthCheck(true);
+
+          <Redirect to="/track-now" />
         }
 
       })
@@ -141,7 +117,7 @@ function App() {
             <Row style={{height: "100vh"}}>
               <Col style={{height: "100%"}} xs={4}>
               <Container>
-              <Card body>This is some text within a card body.
+              <Card body style={{padding: 20, marginTop: 100}}><h2>KC Time Tracker</h2>
                 <Form onSubmit={handleLoginSumbition}>
                   <Form.Group controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
@@ -174,7 +150,8 @@ function App() {
           <Route path="/track-now"><TimeTrackerPage userData={userData}/></Route>
           <Route path="/time-logs"><TimeLogsView /></Route>
           <Route path="/user-management"> <UserManagementView /></Route>          
-          <Route path="/account-management"> <AccountManagmentView /></Route>          
+          <Route path="/account-management"> <AccountManagmentView /></Route>     
+          <Redirect to='/' />     
         </Switch>
       {/* {!authCheck ? <LoginForm/>  : <TimeTrackerPage />} */}            
     </Router>
